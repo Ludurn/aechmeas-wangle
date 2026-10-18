@@ -1,6 +1,6 @@
 use ratatui::{
     Frame,
-    layout::{Alignment, Constraint, Direction, Layout, Rect},
+    layout::{Alignment, Constraint, Direction, Flex, Layout, Rect},
     style::{Color, Style},
     text::{Line, Text},
     widgets::{Block, Borders, Clear, Paragraph, Wrap},
@@ -9,7 +9,44 @@ use ratatui::{
 use crate::app::{App, CurrentScreen};
 
 pub fn ui(frame: &mut Frame, app: &App) {
-    frame.render_widget("Hello World!", frame.area());
+    let default_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Length(3),
+            Constraint::Min(1),
+            Constraint::Length(3),
+        ])
+        .split(frame.area());
+
+    let nav_layout = Layout::default()
+        .direction(Direction::Horizontal)
+        .flex(Flex::SpaceEvenly)
+        .constraints([
+            Constraint::Max(12),
+            Constraint::Max(13),
+            Constraint::Max(13),
+        ])
+        .split(default_layout[0]);
+
+    let nav_labels = ["HOME", "NEW SHEET", "MODEL"];
+
+    nav_labels.iter().enumerate().for_each(|(index, &label)| {
+        let paragraph_color = match (&app.current_screen, label) {
+            (CurrentScreen::Home, "HOME") => Color::Magenta,
+            _ => Color::White,
+        };
+        frame.render_widget(
+            Paragraph::new(label)
+                .block(Block::bordered())
+                .centered()
+                .style(paragraph_color),
+            nav_layout[index],
+        );
+    });
+
+    if let CurrentScreen::Home = app.current_screen {
+        frame.render_widget("Home Screen", default_layout[1]);
+    }
 
     if let CurrentScreen::Exiting = app.current_screen {
         clear_frame(frame);

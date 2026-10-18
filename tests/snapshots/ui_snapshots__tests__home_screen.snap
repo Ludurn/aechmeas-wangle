@@ -2,10 +2,10 @@
 source: tests/ui_snapshots.rs
 expression: terminal.backend()
 ---
-"                                                                                "
-"                                                                                "
+"           ┌──────────┐          ┌───────────┐           ┌───────────┐          "
+"           │   HOME   │          │ NEW SHEET │           │   MODEL   │          "
+"           └──────────┘          └───────────┘           └───────────┘          "
 "Home Screen                                                                     "
-"                                                                                "
 "                                                                                "
 "                                                                                "
 "                                                                                "
