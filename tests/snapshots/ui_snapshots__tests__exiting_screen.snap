@@ -1,0 +1,28 @@
+---
+source: tests/ui_snapshots.rs
+expression: terminal.backend()
+---
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                        ┌Quit?─────────────────────────┐                        "
+"                        │  Would you like to quit the  │                        "
+"                        │             app?             │                        "
+"                        └──────────────────────────────┘                        "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
