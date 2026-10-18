@@ -1,9 +1,9 @@
 use crossterm::event::{self, Event, KeyCode};
 
-mod app;
-mod ui;
-use crate::app::{App, CurrentScreen};
-use crate::ui::ui;
+use aechmeas_wangle::{
+    app::{App, CurrentScreen},
+    ui::ui,
+};
 
 fn main() -> std::io::Result<()> {
     ratatui::run(|mut terminal| {

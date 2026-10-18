@@ -14,3 +14,9 @@ impl App {
         }
     }
 }
+
+impl Default for App {
+    fn default() -> Self {
+        Self::new()
+    }
+}
