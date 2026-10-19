@@ -1,4 +1,4 @@
-use crossterm::event::{self, Event, KeyCode};
+use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyModifiers};
 
 use aechmeas_wangle::{
     app::{App, CurrentScreen},
@@ -6,7 +6,7 @@ use aechmeas_wangle::{
 };
 
 fn main() -> std::io::Result<()> {
-    ratatui::run(|mut terminal| {
+    ratatui::run(|terminal| {
         let mut app = App::new();
         loop {
             terminal.draw(|frame| ui(frame, &mut app))?;
@@ -15,18 +15,48 @@ fn main() -> std::io::Result<()> {
                     continue;
                 }
 
+                match (key.code, key.modifiers) {
+                    (KeyCode::Char('q'), KeyModifiers::CONTROL) => break Ok(()),
+                    (KeyCode::Char('c'), KeyModifiers::CONTROL) => break Ok(()),
+                    _ => {}
+                }
+
                 match app.current_screen {
-                    CurrentScreen::Home => match key.code {
-                        KeyCode::Char('q') => app.current_screen = CurrentScreen::Exiting,
-                        _ => {}
-                    },
+                    CurrentScreen::Home => {
+                        if let Some(screen) = handle_global_keys(key, app.current_screen) {
+                            app.set_screen(screen);
+                        } else {
+                        }
+                    }
+                    CurrentScreen::NewSheet => {
+                        if let Some(screen) = handle_global_keys(key, app.current_screen) {
+                            app.set_screen(screen);
+                        } else {
+                        }
+                    }
+                    CurrentScreen::Model => {
+                        if let Some(screen) = handle_global_keys(key, app.current_screen) {
+                            app.set_screen(screen);
+                        } else {
+                        }
+                    }
                     CurrentScreen::Exiting => match key.code {
                         KeyCode::Char('y') => break Ok(()),
-                        KeyCode::Char('n') => app.current_screen = CurrentScreen::Home,
+                        KeyCode::Char('n') => app.go_back(),
+                        KeyCode::Esc => app.go_back(),
                         _ => {}
                     },
                 }
             }
         }
     })
+}
+
+fn handle_global_keys(key: KeyEvent, current_screen: CurrentScreen) -> Option<CurrentScreen> {
+    match key.code {
+        KeyCode::Char('L') | KeyCode::Tab => Some(CurrentScreen::next(current_screen)),
+        KeyCode::Char('H') => Some(CurrentScreen::previous(current_screen)),
+        KeyCode::Char('q') => Some(CurrentScreen::Exiting),
+        _ => None,
+    }
 }

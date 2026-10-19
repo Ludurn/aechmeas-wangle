@@ -33,6 +33,8 @@ pub fn ui(frame: &mut Frame, app: &App) {
     nav_labels.iter().enumerate().for_each(|(index, &label)| {
         let paragraph_color = match (&app.current_screen, label) {
             (CurrentScreen::Home, "HOME") => Color::Magenta,
+            (CurrentScreen::NewSheet, "NEW SHEET") => Color::Magenta,
+            (CurrentScreen::Model, "MODEL") => Color::Magenta,
             _ => Color::White,
         };
         frame.render_widget(
