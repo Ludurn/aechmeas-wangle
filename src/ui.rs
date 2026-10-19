@@ -3,7 +3,7 @@ use ratatui::{
     layout::{Alignment, Constraint, Direction, Flex, Layout, Rect},
     style::{Color, Style},
     text::{Line, Text},
-    widgets::{Block, Borders, Clear, Paragraph, Wrap},
+    widgets::{Block, Borders, Clear, Paragraph, Row, Table, Wrap},
 };
 
 use crate::app::{App, CurrentScreen};
@@ -49,6 +49,69 @@ pub fn ui(frame: &mut Frame, app: &App) {
     if let CurrentScreen::Home = app.current_screen {
         frame.render_widget("Home Screen", default_layout[1]);
     }
+
+    if let CurrentScreen::Help = app.current_screen {
+        let popup_block = Block::default()
+            .title(Line::from("Commands").style(Style::default().fg(Color::Magenta)))
+            .borders(Borders::ALL)
+            .style(Style::default().bg(Color::Reset));
+
+        let area = centered_rect(50, 15, frame.area());
+        let inner = popup_block.inner(area);
+
+        let mut help_entries = vec![
+            ["Command", "Shortcut", "Description"],
+            ["Quit", "[\"C-q\", \"C-c\"]", "quit immediately"],
+            ["Quit Menu", "[\"q\"]", "open the quit confirmation popup"],
+            ["Close Popup", "[\"esc\"]", "close a popup"],
+            ["Previous Tab", "[\"H\"]", "go to previous tab"],
+            ["Next Tab", "[\"L\", \"tab\"]", "go to next tab"],
+            ["Help", "[\"?\", \"C-h\"]", "open the help popup"],
+        ];
+
+        let contextual_help_entries: Option<Vec<[&str; 3]>> = match app.previous_screen {
+            Some(CurrentScreen::Home) => Some(vec![["", "", ""]]),
+            _ => None,
+        };
+
+        if let Some(vec_text) = contextual_help_entries {
+            help_entries.extend(vec_text);
+        }
+
+        let rows = help_entries
+            .iter()
+            .skip(1)
+            .map(|row| Row::new(vec![row[0], row[1], row[2]]));
+
+        let table = Table::new(
+            rows,
+            [
+                Constraint::Length(30),
+                Constraint::Length(20),
+                Constraint::Fill(1),
+            ],
+        )
+        .header(Row::new(help_entries[0]));
+
+        frame.render_widget(popup_block, area);
+        frame.render_widget(table, inner);
+    }
+
+    let key_hint_layout = Layout::default()
+        .direction(Direction::Horizontal)
+        .flex(Flex::Center)
+        .constraints([Constraint::Max(70)])
+        .split(default_layout[2]);
+
+    let global_key_hints = "[H] Previous tab | [L] or [TAB] Next tab | [q] Quit | [?] Help";
+
+    frame.render_widget(
+        Paragraph::new(global_key_hints)
+            .block(Block::bordered())
+            .centered()
+            .style(Color::Yellow),
+        key_hint_layout[0],
+    );
 
     if let CurrentScreen::Exiting = app.current_screen {
         clear_frame(frame);

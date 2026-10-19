@@ -3,6 +3,7 @@ pub enum CurrentScreen {
     Home,
     NewSheet,
     Model,
+    Help,
     Exiting,
 }
 

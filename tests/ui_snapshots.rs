@@ -35,6 +35,16 @@ mod tests {
     }
 
     #[test]
+    fn help_screen() {
+        let app = App {
+            current_screen: CurrentScreen::Help,
+            ..App::default()
+        };
+
+        assert_screen_snapshot("help_screen", &app);
+    }
+
+    #[test]
     fn exiting_screen() {
         let app = App {
             current_screen: CurrentScreen::Exiting,

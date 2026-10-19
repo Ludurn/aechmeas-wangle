@@ -40,6 +40,10 @@ fn main() -> std::io::Result<()> {
                         } else {
                         }
                     }
+                    CurrentScreen::Help => match key.code {
+                        KeyCode::Esc => app.go_back(),
+                        _ => {}
+                    },
                     CurrentScreen::Exiting => match key.code {
                         KeyCode::Char('y') => break Ok(()),
                         KeyCode::Char('n') => app.go_back(),
@@ -53,10 +57,16 @@ fn main() -> std::io::Result<()> {
 }
 
 fn handle_global_keys(key: KeyEvent, current_screen: CurrentScreen) -> Option<CurrentScreen> {
+    match (key.code, key.modifiers) {
+        (KeyCode::Char('h'), KeyModifiers::CONTROL) => return Some(CurrentScreen::Help),
+        _ => {}
+    }
+
     match key.code {
         KeyCode::Char('L') | KeyCode::Tab => Some(CurrentScreen::next(current_screen)),
         KeyCode::Char('H') => Some(CurrentScreen::previous(current_screen)),
         KeyCode::Char('q') => Some(CurrentScreen::Exiting),
+        KeyCode::Char('?') => Some(CurrentScreen::Help),
         _ => None,
     }
 }
