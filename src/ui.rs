@@ -31,7 +31,7 @@ pub fn ui(frame: &mut Frame, app: &App) {
     let nav_labels = ["HOME", "NEW SHEET", "MODEL"];
 
     nav_labels.iter().enumerate().for_each(|(index, &label)| {
-        let paragraph_color = match (&app.current_screen, label) {
+        let p_color = match (&app.current_screen, label) {
             (CurrentScreen::Home, "HOME") => Color::Magenta,
             (CurrentScreen::NewSheet, "NEW SHEET") => Color::Magenta,
             (CurrentScreen::Model, "MODEL") => Color::Magenta,
@@ -41,7 +41,7 @@ pub fn ui(frame: &mut Frame, app: &App) {
             Paragraph::new(label)
                 .block(Block::bordered())
                 .centered()
-                .style(paragraph_color),
+                .style(p_color),
             nav_layout[index],
         );
     });
