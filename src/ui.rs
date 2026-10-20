@@ -46,8 +46,11 @@ pub fn ui(frame: &mut Frame, app: &App) {
         );
     });
 
+    let main_block = Block::bordered();
+    let main_chunk = main_block.inner(default_layout[1]);
+    frame.render_widget(main_block, default_layout[1]);
+
     if let CurrentScreen::Home = app.current_screen {
-        frame.render_widget("Home Screen", default_layout[1]);
     }
 
     if let CurrentScreen::Help = app.current_screen {
