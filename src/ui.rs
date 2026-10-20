@@ -50,6 +50,28 @@ pub fn ui(frame: &mut Frame, app: &App) {
     let main_chunk = main_block.inner(default_layout[1]);
     frame.render_widget(main_block, default_layout[1]);
 
+    let (w, h) = (frame.area().width, frame.area().height);
+
+    let cols = match w {
+        201.. => 5,
+        151..=200 => 4,
+        131..=150 => 3,
+        81..=130 => 2,
+        31..=80 => 1,
+        _ => 1,
+    };
+
+    let rows = match h {
+        51.. => 5,
+        41..=50 => 4,
+        31..=40 => 3,
+        24..=30 => 2,
+        11..=23 => 1,
+        _ => 1,
+    };
+
+    let grid: Vec<Vec<Rect>> = grid(cols, rows, main_chunk);
+
     if let CurrentScreen::Home = app.current_screen {
     }
 
@@ -150,4 +172,17 @@ fn clear_frame(frame: &mut Frame) {
 
 fn centered_rect(x: u16, y: u16, r: Rect) -> Rect {
     r.centered(Constraint::Percentage(x), Constraint::Length(y))
+}
+
+fn grid(cols: usize, rows: usize, area: Rect) -> Vec<Vec<Rect>> {
+    let columns = Layout::horizontal(vec![Constraint::Fill(1); cols]).split(area);
+
+    columns
+        .iter()
+        .map(|col| {
+            Layout::vertical(vec![Constraint::Fill(1); rows])
+                .split(*col)
+                .to_vec()
+        })
+        .collect()
 }
