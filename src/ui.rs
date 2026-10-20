@@ -9,6 +9,8 @@ use ratatui::{
 use crate::app::{App, CurrentScreen};
 
 pub fn ui(frame: &mut Frame, app: &App) {
+    let area = frame.area();
+
     let default_layout = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
@@ -16,7 +18,7 @@ pub fn ui(frame: &mut Frame, app: &App) {
             Constraint::Min(1),
             Constraint::Length(3),
         ])
-        .split(frame.area());
+        .split(area);
 
     let nav_layout = Layout::default()
         .direction(Direction::Horizontal)
@@ -50,7 +52,7 @@ pub fn ui(frame: &mut Frame, app: &App) {
     let main_chunk = main_block.inner(default_layout[1]);
     frame.render_widget(main_block, default_layout[1]);
 
-    let (w, h) = (frame.area().width, frame.area().height);
+    let (w, h) = (area.width, area.height);
 
     let cols = match w {
         201.. => 5,
@@ -81,8 +83,8 @@ pub fn ui(frame: &mut Frame, app: &App) {
             .borders(Borders::ALL)
             .style(Style::default().bg(Color::Reset));
 
-        let area = centered_rect(50, 15, frame.area());
-        let inner = popup_block.inner(area);
+        let popup_area = centered_rect(50, 15, area);
+        let inner = popup_block.inner(popup_area);
 
         let mut help_entries = vec![
             ["Command", "Shortcut", "Description"],
@@ -118,7 +120,7 @@ pub fn ui(frame: &mut Frame, app: &App) {
         )
         .header(Row::new(help_entries[0]));
 
-        frame.render_widget(popup_block, area);
+        frame.render_widget(popup_block, popup_area);
         frame.render_widget(table, inner);
     }
 
@@ -146,8 +148,8 @@ pub fn ui(frame: &mut Frame, app: &App) {
             .borders(Borders::ALL)
             .style(Style::default().bg(Color::Reset));
 
-        let area = centered_rect(50, 8, frame.area());
-        let line_width = area.width.saturating_sub(2);
+        let popup_area = centered_rect(50, 8, area);
+        let line_width = popup_area.width.saturating_sub(2);
 
         let exit_text = Text::from(vec![
             Line::from("Would you like to quit the app?"),
@@ -162,7 +164,7 @@ pub fn ui(frame: &mut Frame, app: &App) {
             .block(popup_block)
             .wrap(Wrap { trim: false });
 
-        frame.render_widget(exit_paragraph, area);
+        frame.render_widget(exit_paragraph, popup_area);
     }
 }
 
