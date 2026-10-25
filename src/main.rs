@@ -1,7 +1,7 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyModifiers};
 
 use aechmeas_wangle::{
-    app::{App, CurrentScreen},
+    app::{App, CurrentScreen, GridState},
     ui::ui,
 };
 
@@ -26,6 +26,7 @@ fn main() -> std::io::Result<()> {
                         if let Some(screen) = handle_global_keys(key, app.current_screen) {
                             app.set_screen(screen);
                         } else {
+                            handle_grid_navigation(key, &mut app.home_grid);
                         }
                     }
                     CurrentScreen::NewSheet => {
@@ -68,5 +69,15 @@ fn handle_global_keys(key: KeyEvent, current_screen: CurrentScreen) -> Option<Cu
         KeyCode::Char('q') => Some(CurrentScreen::Exiting),
         KeyCode::Char('?') => Some(CurrentScreen::Help),
         _ => None,
+    }
+}
+
+fn handle_grid_navigation(key: KeyEvent, view: &mut GridState) {
+    match key.code {
+        KeyCode::Char('k') => view.up(),
+        KeyCode::Char('j') => view.down(),
+        KeyCode::Char('h') => view.left(),
+        KeyCode::Char('l') => view.right(),
+        _ => {}
     }
 }
