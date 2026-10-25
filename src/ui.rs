@@ -54,15 +54,6 @@ pub fn ui(frame: &mut Frame, app: &App) {
 
     let (w, h) = (area.width, area.height);
 
-    let cols = match w {
-        201.. => 5,
-        151..=200 => 4,
-        131..=150 => 3,
-        81..=130 => 2,
-        31..=80 => 1,
-        _ => 1,
-    };
-
     let rows = match h {
         51.. => 5,
         41..=50 => 4,
@@ -72,7 +63,17 @@ pub fn ui(frame: &mut Frame, app: &App) {
         _ => 1,
     };
 
-    let grid: Vec<Vec<Rect>> = grid(cols, rows, main_chunk);
+    let cols = match w {
+        201.. => 5,
+        151..=200 => 4,
+        131..=150 => 3,
+        81..=130 => 2,
+        31..=80 => 1,
+        _ => 1,
+    };
+
+    let grid: Vec<Vec<Rect>> = grid(rows, cols, main_chunk);
+
 
     if let CurrentScreen::Home = app.current_screen {
     }
@@ -176,14 +177,13 @@ fn centered_rect(x: u16, y: u16, r: Rect) -> Rect {
     r.centered(Constraint::Percentage(x), Constraint::Length(y))
 }
 
-fn grid(cols: usize, rows: usize, area: Rect) -> Vec<Vec<Rect>> {
-    let columns = Layout::horizontal(vec![Constraint::Fill(1); cols]).split(area);
+fn grid(rows: usize, cols: usize, area: Rect) -> Vec<Vec<Rect>> {
+    let rows = Layout::vertical(vec![Constraint::Fill(1); rows]).split(area);
 
-    columns
-        .iter()
-        .map(|col| {
-            Layout::vertical(vec![Constraint::Fill(1); rows])
-                .split(*col)
+    rows.iter()
+        .map(|row| {
+            Layout::horizontal(vec![Constraint::Fill(1); cols])
+                .split(*row)
                 .to_vec()
         })
         .collect()
