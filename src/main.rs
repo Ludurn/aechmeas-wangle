@@ -8,6 +8,10 @@ use aechmeas_wangle::{
 };
 
 fn main() -> std::io::Result<()> {
+    let _db = db::connection::open().expect("Failed to open database");
+
+    println!("Database connected");
+
     ratatui::run(|terminal| {
         let mut app = App::new();
         loop {
