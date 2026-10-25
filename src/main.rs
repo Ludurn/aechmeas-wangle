@@ -1,5 +1,7 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyModifiers};
 
+mod db;
+
 use aechmeas_wangle::{
     app::{App, CurrentScreen, GridState},
     ui::ui,
