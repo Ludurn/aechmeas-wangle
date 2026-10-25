@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 crossterm = "0.29.0"
 ratatui = "0.30.2"
+rusqlite = "0.41.0"
 
 [dev-dependencies]
 insta = "1.49.0"
