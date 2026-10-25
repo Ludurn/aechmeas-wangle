@@ -18,6 +18,7 @@ pub struct GridState {
 pub struct App {
     pub current_screen: CurrentScreen,
     pub previous_screen: Option<CurrentScreen>,
+    pub home_grid: GridState,
 }
 
 impl App {
@@ -25,6 +26,7 @@ impl App {
         App {
             current_screen: CurrentScreen::Home,
             previous_screen: None,
+            home_grid: GridState::default(),
         }
     }
 

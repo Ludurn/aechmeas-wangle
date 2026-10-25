@@ -8,7 +8,7 @@ use ratatui::{
 
 use crate::app::{App, CurrentScreen};
 
-pub fn ui(frame: &mut Frame, app: &App) {
+pub fn ui(frame: &mut Frame, app: &mut App) {
     let area = frame.area();
 
     let default_layout = Layout::default()
@@ -74,8 +74,27 @@ pub fn ui(frame: &mut Frame, app: &App) {
 
     let grid: Vec<Vec<Rect>> = grid(rows, cols, main_chunk);
 
+    let cards = [1];
+
+    app.home_grid.update_layout(rows, cols, cards.len());
 
     if let CurrentScreen::Home = app.current_screen {
+        let first_index = app.home_grid.scroll_row * cols;
+
+        for row in 0..rows {
+            for col in 0..cols {
+                let index = first_index + row * cols + col;
+
+                match cards.get(index) {
+                    Some(_) => {
+                        let selected = index == app.home_grid.selected;
+
+                        render_card(grid[row][col], frame, selected);
+                    }
+                    _ => {}
+                }
+            }
+        }
     }
 
     if let CurrentScreen::Help = app.current_screen {
@@ -187,4 +206,29 @@ fn grid(rows: usize, cols: usize, area: Rect) -> Vec<Vec<Rect>> {
                 .to_vec()
         })
         .collect()
+}
+
+fn render_card(area: Rect, frame: &mut Frame, selected: bool) {
+    let color = match selected {
+        true => Color::Magenta,
+        _ => Color::White,
+    };
+
+    let card_block = Block::bordered().style(Style::default().fg(color));
+    let card_inner = card_block.inner(area);
+    let line_width = area.area().saturating_sub(2);
+
+    let card_text = Text::from(vec![
+        Line::from("Character Name Character Surname"),
+        Line::from("─".repeat(line_width as usize)),
+        Line::from("Simple Desc"),
+        Line::from("Model Name"),
+        Line::from("Last access: 01/01/1999, 11:24 PM"),
+    ]);
+
+    frame.render_widget(
+        Paragraph::new(card_text).style(Style::default().fg(color)),
+        card_inner,
+    );
+    frame.render_widget(card_block, area);
 }
